@@ -44,7 +44,6 @@ bool BlockchainHandler::isWalletConfigValid()
 int32_t BlockchainHandler::performNodeSync(HttpAPI *webAPI)
 {
     LOG_DEBUG("\nWallet public key: %s\n", public_key_.data());
-    LOG_DEBUG("\nWallet private key: %s\n", private_key_.data());
 
     if (!isWalletConfigValid() || !isWifiAvailable()) {
         return 300000; // Every 5 minutes.
