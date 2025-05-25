@@ -198,6 +198,16 @@ typedef struct _meshtastic_ModuleConfig_WalletConfig {
     char private_key[65];
 } meshtastic_ModuleConfig_WalletConfig;
 
+/* Payment Module Config */
+typedef struct _meshtastic_ModuleConfig_PaymentConfig {
+    /* Whether the Module is enabled */
+    bool enabled;
+    /* Wallet address to send payment */
+    char address[67];
+    /* Amount to send */
+    char amount[16];
+} meshtastic_ModuleConfig_PaymentConfig;
+
 /* Audio Config for codec2 voice */
 typedef struct _meshtastic_ModuleConfig_AudioConfig {
     /* Whether Audio is enabled */
@@ -453,6 +463,8 @@ typedef struct _meshtastic_ModuleConfig {
         meshtastic_ModuleConfig_PaxcounterConfig paxcounter;
         /* TODO: REPLACE */
         meshtastic_ModuleConfig_WalletConfig wallet;
+        /* TODO: REPLACE */
+        meshtastic_ModuleConfig_PaymentConfig payment;
     } payload_variant;
 } meshtastic_ModuleConfig;
 
@@ -519,6 +531,7 @@ extern "C" {
 #define meshtastic_ModuleConfig_NeighborInfoConfig_init_default {0, 0, 0}
 #define meshtastic_ModuleConfig_DetectionSensorConfig_init_default {0, 0, 0, 0, "", 0, _meshtastic_ModuleConfig_DetectionSensorConfig_TriggerType_MIN, 0}
 #define meshtastic_ModuleConfig_WalletConfig_init_default {0, "", ""}
+#define meshtastic_ModuleConfig_PaymentConfig_init_default {0, "", ""}
 #define meshtastic_ModuleConfig_AudioConfig_init_default {0, 0, _meshtastic_ModuleConfig_AudioConfig_Audio_Baud_MIN, 0, 0, 0, 0}
 #define meshtastic_ModuleConfig_PaxcounterConfig_init_default {0, 0, 0, 0}
 #define meshtastic_ModuleConfig_SerialConfig_init_default {0, 0, 0, 0, _meshtastic_ModuleConfig_SerialConfig_Serial_Baud_MIN, 0, _meshtastic_ModuleConfig_SerialConfig_Serial_Mode_MIN, 0}
@@ -536,6 +549,7 @@ extern "C" {
 #define meshtastic_ModuleConfig_NeighborInfoConfig_init_zero {0, 0, 0}
 #define meshtastic_ModuleConfig_DetectionSensorConfig_init_zero {0, 0, 0, 0, "", 0, _meshtastic_ModuleConfig_DetectionSensorConfig_TriggerType_MIN, 0}
 #define meshtastic_ModuleConfig_WalletConfig_init_zero {0, "", ""}
+#define meshtastic_ModuleConfig_PaymentConfig_init_zero {0, "", ""}
 #define meshtastic_ModuleConfig_AudioConfig_init_zero {0, 0, _meshtastic_ModuleConfig_AudioConfig_Audio_Baud_MIN, 0, 0, 0, 0}
 #define meshtastic_ModuleConfig_PaxcounterConfig_init_zero {0, 0, 0, 0}
 #define meshtastic_ModuleConfig_SerialConfig_init_zero {0, 0, 0, 0, _meshtastic_ModuleConfig_SerialConfig_Serial_Baud_MIN, 0, _meshtastic_ModuleConfig_SerialConfig_Serial_Mode_MIN, 0}
@@ -575,6 +589,9 @@ extern "C" {
 #define meshtastic_ModuleConfig_WalletConfig_enabled_tag 1
 #define meshtastic_ModuleConfig_WalletConfig_public_key_tag 2
 #define meshtastic_ModuleConfig_WalletConfig_private_key_tag 3
+#define meshtastic_ModuleConfig_PaymentConfig_enabled_tag 1
+#define meshtastic_ModuleConfig_PaymentConfig_address_tag 2
+#define meshtastic_ModuleConfig_PaymentConfig_amount_tag 3
 #define meshtastic_ModuleConfig_AudioConfig_codec2_enabled_tag 1
 #define meshtastic_ModuleConfig_AudioConfig_ptt_pin_tag 2
 #define meshtastic_ModuleConfig_AudioConfig_bitrate_tag 3
@@ -667,6 +684,7 @@ extern "C" {
 #define meshtastic_ModuleConfig_detection_sensor_tag 12
 #define meshtastic_ModuleConfig_paxcounter_tag   13
 #define meshtastic_ModuleConfig_wallet_tag       14
+#define meshtastic_ModuleConfig_payment_tag      15
 
 /* Struct field encoding specification for nanopb */
 #define meshtastic_ModuleConfig_FIELDLIST(X, a) \
@@ -683,7 +701,9 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,neighbor_info,payload_varian
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,ambient_lighting,payload_variant.ambient_lighting),  11) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,detection_sensor,payload_variant.detection_sensor),  12) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,paxcounter,payload_variant.paxcounter),  13) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,wallet,payload_variant.wallet),  14)
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,wallet,payload_variant.wallet),  14) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,payment,payload_variant.payment),  15)
+
 #define meshtastic_ModuleConfig_CALLBACK NULL
 #define meshtastic_ModuleConfig_DEFAULT NULL
 #define meshtastic_ModuleConfig_payload_variant_mqtt_MSGTYPE meshtastic_ModuleConfig_MQTTConfig
@@ -700,6 +720,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (payload_variant,wallet,payload_variant.walle
 #define meshtastic_ModuleConfig_payload_variant_detection_sensor_MSGTYPE meshtastic_ModuleConfig_DetectionSensorConfig
 #define meshtastic_ModuleConfig_payload_variant_paxcounter_MSGTYPE meshtastic_ModuleConfig_PaxcounterConfig
 #define meshtastic_ModuleConfig_payload_variant_wallet_MSGTYPE meshtastic_ModuleConfig_WalletConfig
+#define meshtastic_ModuleConfig_payload_variant_payment_MSGTYPE meshtastic_ModuleConfig_PaymentConfig
 
 #define meshtastic_ModuleConfig_MQTTConfig_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, BOOL,     enabled,           1) \
@@ -756,6 +777,13 @@ X(a, STATIC,   SINGULAR, STRING,   public_key,        2) \
 X(a, STATIC,   SINGULAR, STRING,   private_key,       3)
 #define meshtastic_ModuleConfig_WalletConfig_CALLBACK NULL
 #define meshtastic_ModuleConfig_WalletConfig_DEFAULT NULL
+
+#define meshtastic_ModuleConfig_PaymentConfig_FIELDLIST(X, a) \
+X(a, STATIC,   SINGULAR, BOOL,     enabled,           1) \
+X(a, STATIC,   SINGULAR, STRING,   address,           2) \
+X(a, STATIC,   SINGULAR, STRING,   amount,            3)
+#define meshtastic_ModuleConfig_PaymentConfig_CALLBACK NULL
+#define meshtastic_ModuleConfig_PaymentConfig_DEFAULT NULL
 
 #define meshtastic_ModuleConfig_AudioConfig_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, BOOL,     codec2_enabled,    1) \
@@ -879,6 +907,7 @@ extern const pb_msgdesc_t meshtastic_ModuleConfig_RemoteHardwareConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_NeighborInfoConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_DetectionSensorConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_WalletConfig_msg;
+extern const pb_msgdesc_t meshtastic_ModuleConfig_PaymentConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_AudioConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_PaxcounterConfig_msg;
 extern const pb_msgdesc_t meshtastic_ModuleConfig_SerialConfig_msg;
@@ -898,6 +927,7 @@ extern const pb_msgdesc_t meshtastic_RemoteHardwarePin_msg;
 #define meshtastic_ModuleConfig_NeighborInfoConfig_fields &meshtastic_ModuleConfig_NeighborInfoConfig_msg
 #define meshtastic_ModuleConfig_DetectionSensorConfig_fields &meshtastic_ModuleConfig_DetectionSensorConfig_msg
 #define meshtastic_ModuleConfig_WalletConfig_fields &meshtastic_ModuleConfig_WalletConfig_msg
+#define meshtastic_ModuleConfig_PaymentConfig_fields &meshtastic_ModuleConfig_PaymentConfig_msg
 #define meshtastic_ModuleConfig_AudioConfig_fields &meshtastic_ModuleConfig_AudioConfig_msg
 #define meshtastic_ModuleConfig_PaxcounterConfig_fields &meshtastic_ModuleConfig_PaxcounterConfig_msg
 #define meshtastic_ModuleConfig_SerialConfig_fields &meshtastic_ModuleConfig_SerialConfig_msg
@@ -926,6 +956,7 @@ extern const pb_msgdesc_t meshtastic_RemoteHardwarePin_msg;
 #define meshtastic_ModuleConfig_StoreForwardConfig_size 24
 #define meshtastic_ModuleConfig_TelemetryConfig_size 46
 #define meshtastic_ModuleConfig_WalletConfig_size 132
+#define meshtastic_ModuleConfig_PaymentConfig_size 85
 #define meshtastic_ModuleConfig_size             257
 #define meshtastic_RemoteHardwarePin_size        21
 

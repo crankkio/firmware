@@ -622,6 +622,7 @@ void NodeDB::installDefaultModuleConfig()
     moduleConfig.ambient_lighting.blue = myNodeInfo.my_node_num & 0x0000FF;
 
     moduleConfig.has_wallet = true;
+    moduleConfig.has_payment = true;
 
     initModuleConfigIntervals();
 }
@@ -1084,6 +1085,7 @@ bool NodeDB::saveToDiskNoRetry(int saveWhat)
         moduleConfig.has_audio = true;
         moduleConfig.has_paxcounter = true;
         moduleConfig.has_wallet = true;
+        moduleConfig.has_payment = true;
 
         success &=
             saveProto(moduleConfigFileName, meshtastic_LocalModuleConfig_size, &meshtastic_LocalModuleConfig_msg, &moduleConfig);

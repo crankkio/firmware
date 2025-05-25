@@ -23,6 +23,7 @@
 #endif
 
 #include "concurrency/Periodic.h"
+#include "mesh/MeshService.h"
 #include "mesh/http/ContentHandler.h"
 #include <BlockchainHandler.h>
 
